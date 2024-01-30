@@ -5,5 +5,6 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(('management.urls', 'management'), namespace='management'))
+    path('', include(arg=('management.urls', 'management'), namespace='management')),
+    # path('manuals/', include(arg=('manual.urls', 'manual'), namespace='manual'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

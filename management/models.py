@@ -16,18 +16,18 @@ class DailyCheck(models.Model):
 
     photo = models.ManyToManyField(manual_models.Photo, verbose_name='Фото')
 
-    city = models.ForeignKey(manual_models.City, on_delete=models.CASCADE, verbose_name='Город')
+    city = models.ForeignKey(manual_models.City, on_delete=models.CASCADE, verbose_name='Город', null=True)
     car = models.ForeignKey(manual_models.Car, on_delete=models.CASCADE, verbose_name='Автомобиль')
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
 
-    defect = models.TextField(verbose_name='Примечание')
+    defect = models.TextField(verbose_name='Примечание', null=True, blank=True)
     defect_status = models.CharField(max_length=2, choices=Status.choices, default=Status.CONFIRM,
                                      verbose_name='Статус примечания')
 
-    mileage = models.PositiveIntegerField(verbose_name='Пробег')
+    mileage = models.PositiveIntegerField(verbose_name='Пробег', default=0)
 
-    key = models.CharField(max_length=500, verbose_name='Держатель ключей')
-    document = models.CharField(max_length=500, verbose_name='Держатель документов')
+    key = models.CharField(max_length=500, verbose_name='Держатель ключей', blank=True)
+    document = models.CharField(max_length=500, verbose_name='Держатель документов', blank=True)
 
     created = models.DateTimeField(auto_now_add=True, verbose_name='Дата открытия')
     updated = models.DateTimeField(auto_now=True, verbose_name='Дата закрытия')

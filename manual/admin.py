@@ -23,6 +23,8 @@ class CarMarkAdmin(admin.ModelAdmin):
 @admin.register(models.CarModel)
 class CarModelAdmin(admin.ModelAdmin):
     list_display = ['mark', 'name']
+    list_filter = ['mark']
+    search_fields = ['mark', 'name']
 
 
 @admin.register(models.City)
@@ -37,6 +39,7 @@ class CarAdmin(admin.ModelAdmin):
     prepopulated_fields = {
         'slug': ('gos_number',)
     }
+    raw_id_fields = ['car_model']
 
 
 @admin.register(models.CarParam)

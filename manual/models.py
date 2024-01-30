@@ -44,11 +44,19 @@ class CarModel(models.Model):
         return f'{self.mark} {self.name}'
 
 
+class CarManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(parameters__status=CarParam.Status.FREE)
+
+
 class Car(models.Model):
     """
         Модель Автомобиля
         для каждого автомобился создаются CarParam для описания дополнительных параметров
     """
+
+    objects = models.Manager()
+    free_cars = CarManager()
 
     car_model = models.ForeignKey(CarModel, on_delete=models.CASCADE, verbose_name='Марка/Модель')
     gos_number = models.CharField(max_length=9, verbose_name='Гос. номер')
@@ -70,6 +78,9 @@ class Car(models.Model):
 
         return f'{model} - {self.gos_number}'
 
+    def get_daily_check(self):
+        return self.dailycheck_set.get(active=True)
+
 
 class CarParam(models.Model):
     """
@@ -85,7 +96,7 @@ class CarParam(models.Model):
     class Meta:
         verbose_name_plural = 'Автомобиль. Дополнительные сведения'
 
-    car = models.OneToOneField(Car, on_delete=models.CASCADE, verbose_name='Автомобиль')
+    car = models.OneToOneField(Car, on_delete=models.CASCADE, verbose_name='Автомобиль', related_name='parameters')
     insurance = models.DateField(verbose_name='Страховка')
     technical_service = models.PositiveIntegerField(verbose_name='ТО')
     grm = models.PositiveIntegerField(verbose_name='ГРМ')

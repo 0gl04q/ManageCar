@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %} Профиль {% endblock %}
+
+{% block content %}
+
+    <h1>Автомобили {{ user.username }}</h1>
+    {% for car in cars %}
+        {{ car }}
+        |
+        {% if car.get_daily_check %}
+            <a href="{% url 'management:close_daily_check' car.id %}">Закрыть смену</a>
+        {% else %}
+            <a href="{% url 'management:create_daily_check' car.id %}">Открыть смену</a>
+        {% endif %}
+        |
+        <a href="{% url 'management:car_return' car.id %}"> Вернуть авто </a>
+    {% empty %}
+        <p>Нет автомобилей</p>
+    {% endfor %}
+
+{% endblock %}
