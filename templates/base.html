@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    {% if messages %}
+        {% for message in messages %}
+            {{ message.tags }} {{ message }}
+        {% endfor %}
+    {% endif %}
+
+    <p> <a href="{% url 'management:car_list' %}">Список автомобилей</a> | <a href="{% url 'management:profile' %}">Профиль пользователя</a> </p>
+
+    {% block content %}{% endblock %}
+</body>
+</html>

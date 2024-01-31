@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Свободные автомобили{% endblock %}
+
+{% block content %}
+    <h1>Список свободных автомобилей</h1>
+    {% for car in cars %}
+        <p>{{ car }} <a href="{% url 'management:car_migration' car_id=car.id %}">Взять авто</a></p>
+    {% empty %}
+        <p>Нет свободных автомобилей</p>
+    {% endfor %}
+{% endblock %}
