@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.http import HttpResponse
 from django.views.decorators.http import require_POST, require_GET
-
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 
+from .forms import DailyCheckForm
 from .models import CarMigration, DailyCheck
 from manual.models import Car, CarParam
 
@@ -95,15 +96,20 @@ def create_daily_check(request, car_id):
     return redirect(to=reverse(viewname='management:profile'))
 
 
-@require_GET
 def close_daily_check(request, car_id):
-    # TODO добавить форму закрытия смены
+    form = DailyCheckForm()
 
-    daily_check = get_object_or_404(DailyCheck, car=car_id, active=True, author=request.user)
-    daily_check.active = False
-    daily_check.save()
+    if request.method == 'POST':
+        daily_check = get_object_or_404(DailyCheck, car=car_id, active=True, author=request.user)
 
-    return redirect(to=reverse(viewname='management:profile'))
+        form = DailyCheckForm(data=request.POST, instance=daily_check)
+        if form.is_valid():
+            form.instance.active = False
+            form.save()
+
+            return redirect(to=reverse(viewname='management:profile'))
+
+    return render(request, template_name='management/close_daily_check.html', context={'form': form})
 
 
 def redirect_view(request):
