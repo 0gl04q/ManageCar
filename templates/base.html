@@ -12,7 +12,19 @@
         {% endfor %}
     {% endif %}
 
-    <p> <a href="{% url 'management:car_list' %}">Список автомобилей</a> | <a href="{% url 'management:profile' %}">Профиль пользователя</a> </p>
+    <p> <a href="{% url 'management:car_list' %}">Свободные авто</a> |
+        {% if user.is_authenticated %}
+            <a href="{% url 'management:user_cars' %}"> Авто пользователя </a> |
+            Пользователь <a href="{% url 'profile' %}"> {{ user.username }} </a>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="Выход">
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}"> Вход </a> |
+            <a href="{% url 'password_reset' %}"> Забыли пароль </a>
+        {% endif %}
+    </p>
 
     {% block content %}{% endblock %}
 </body>

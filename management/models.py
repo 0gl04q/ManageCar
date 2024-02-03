@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.timezone import now
 from django.contrib.auth.models import User
 import manual.models as manual_models
 
@@ -20,23 +21,25 @@ class DailyCheck(models.Model):
     car = models.ForeignKey(manual_models.Car, on_delete=models.CASCADE, verbose_name='Автомобиль')
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
 
-    defect = models.TextField(verbose_name='Примечание', null=True, blank=True)
+    defect = models.TextField(verbose_name='Описание дефектов', null=True)
     defect_status = models.CharField(max_length=2, choices=Status.choices, default=Status.CONFIRM,
-                                     verbose_name='Статус примечания')
+                                     verbose_name='Статус дефектов')
 
-    mileage = models.PositiveIntegerField(verbose_name='Пробег', default=0)
+    mileage_auto = models.PositiveIntegerField(verbose_name='Пробег авто', null=True)
+    mileage_daily = models.PositiveIntegerField(verbose_name='Пробег за смену', null=True)
 
-    key = models.CharField(max_length=500, verbose_name='Держатель ключей', blank=True)
-    document = models.CharField(max_length=500, verbose_name='Держатель документов', blank=True)
+    key = models.CharField(max_length=500, verbose_name='Держатель ключей', null=True)
+    document = models.CharField(max_length=500, verbose_name='Держатель документов', null=True)
 
-    created = models.DateTimeField(auto_now_add=True, verbose_name='Дата открытия')
-    updated = models.DateTimeField(auto_now=True, verbose_name='Дата закрытия')
+    created = models.DateField(auto_now_add=True, verbose_name='Дата открытия')
+    updated = models.DateField(auto_now=True, verbose_name='Дата закрытия')
 
     active = models.BooleanField(default=True, verbose_name='Статус')
 
     class Meta:
         verbose_name_plural = 'Отчеты по автомобилям'
         ordering = ['-created']
+        unique_together = ('created', 'car', 'author')
         indexes = [
             models.Index(fields=['active', 'author'])
         ]

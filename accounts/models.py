@@ -10,3 +10,4 @@ from manual.models import City
 #
 #     def __str__(self):
 #         return self.user.username
+# 2

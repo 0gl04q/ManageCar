@@ -8,13 +8,19 @@
     {% for car in cars %}
         {{ car }}
         |
-        {% if car.get_daily_check %}
+        {% if car.get_active_daily_check %}
             <a href="{% url 'management:close_daily_check' car.id %}">Закрыть смену</a>
         {% else %}
-            <a href="{% url 'management:create_daily_check' car.id %}">Открыть смену</a>
+            {% if car.get_last_daily_check %}
+                <a href="#">Смена закрыта</a>
+            {% else %}
+                <a href="{% url 'management:create_daily_check' car.id %}">Открыть смену</a>
+            {% endif %}
         {% endif %}
         |
         <a href="{% url 'management:car_return' car.id %}"> Вернуть авто </a>
+        <br>
+        <br>
     {% empty %}
         <p>Нет автомобилей</p>
     {% endfor %}

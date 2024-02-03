@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.http import HttpResponse
+from django.utils.timezone import now
 from django.views.decorators.http import require_POST, require_GET
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -74,7 +75,7 @@ def get_profile(request):
 
     return render(
         request=request,
-        template_name='management/profile.html',
+        template_name='management/user_cars.html',
         context=context
     )
 

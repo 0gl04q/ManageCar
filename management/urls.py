@@ -10,5 +10,5 @@ urlpatterns = [
     path('car_return/<int:car_id>/', views.car_return, name='car_return'),
     path('create_daily_check/<int:car_id>/', views.create_daily_check, name='create_daily_check'),
     path('close_daily_check/<int:car_id>/', views.close_daily_check, name='close_daily_check'),
-    path('profile/', views.get_profile, name='profile')
+    path('user_cars/', views.get_profile, name='user_cars')
 ]

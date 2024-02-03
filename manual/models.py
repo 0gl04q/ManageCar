@@ -78,8 +78,11 @@ class Car(models.Model):
 
         return f'{model} - {self.gos_number}'
 
-    def get_daily_check(self):
+    def get_active_daily_check(self):
         return self.dailycheck_set.get(active=True)
+
+    def get_last_daily_check(self):
+        return self.dailycheck_set.filter(created=now().date())
 
 
 class CarParam(models.Model):
