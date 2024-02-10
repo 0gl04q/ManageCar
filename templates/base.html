@@ -1,31 +1,93 @@
-{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+{% load static %}
+<html lang="en" class="h-100">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>{% block title %}{% endblock %}</title>
-</head>
-<body>
-    {% if messages %}
-        {% for message in messages %}
-            {{ message.tags }} {{ message }}
-        {% endfor %}
-    {% endif %}
 
-    <p> <a href="{% url 'management:car_list' %}">Свободные авто</a> |
-        {% if user.is_authenticated %}
-            <a href="{% url 'management:user_cars' %}"> Авто пользователя </a> |
-            Пользователь <a href="{% url 'profile' %}"> {{ user.username }} </a>
-            <form action="{% url 'logout' %}" method="post">
-                {% csrf_token %}
-                <input type="submit" value="Выход">
-            </form>
-        {% else %}
-            <a href="{% url 'login' %}"> Вход </a> |
-            <a href="{% url 'password_reset' %}"> Забыли пароль </a>
+    {% load django_bootstrap5 %}
+
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
+
+
+<!--    <link href="{% static 'css/cover.css' %}" rel="stylesheet">-->
+  </head>
+
+<body class="d-flex h-100">
+
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+
+        <nav class="navbar navbar-expand-lg navbar-light mb-3">
+          <div class="container-fluid">
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" href="#">УПРАВТО</a>
+          </div>
+        </nav>
+
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Меню</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body text-center">
+
+              {% if user.is_authenticated %}
+                <a class="btn btn-secondary form-control py-4" aria-current="page" href="{% url 'management:car_list' %}">Свободные</a>
+                <br>
+                <br>
+                <a class="btn btn-secondary form-control py-4" href="{% url 'management:user_cars' %}">Записанные</a>
+
+                {% if perms.manual.view_all_car %}
+                    <br>
+                    <br>
+                    <a class="btn btn-secondary form-control py-4" href="{% url 'management:manage_cars' %}">Управление автомобилями</a>
+                {% endif %}
+
+              {% endif %}
+          </div>
+          <div class="offcanvas-footer text-center mb-4">
+              {% if user.is_authenticated %}
+                  <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger me-4">Выход</button>
+                  </form>
+              {% endif %}
+          </div>
+        </div>
+
+
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="container">
+                    <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            {% endfor %}
         {% endif %}
-    </p>
 
-    {% block content %}{% endblock %}
+      <main class="mx-3">
+
+          {% block content %}
+
+          {% endblock %}
+
+      </main>
+
+      <footer class="mt-auto text-center">
+        <p>v.АЛЬФА</p>
+      </footer>
+    </div>
+
+
 </body>
 </html>

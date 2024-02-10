@@ -4,25 +4,38 @@
 
 {% block content %}
 
-    <h1>Автомобили {{ user.username }}</h1>
-    {% for car in cars %}
-        {{ car }}
-        |
-        {% if car.get_active_daily_check %}
-            <a href="{% url 'management:close_daily_check' car.id %}">Закрыть смену</a>
-        {% else %}
-            {% if car.get_last_daily_check %}
-                <a href="#">Смена закрыта</a>
-            {% else %}
-                <a href="{% url 'management:create_daily_check' car.id %}">Открыть смену</a>
-            {% endif %}
-        {% endif %}
-        |
-        <a href="{% url 'management:car_return' car.id %}"> Вернуть авто </a>
-        <br>
-        <br>
-    {% empty %}
-        <p>Нет автомобилей</p>
-    {% endfor %}
+
+        {% for car in cars %}
+
+        <div class="row align-items-start mb-3 border rounded">
+            <div class="col-4 align-self-center text-center py-4">
+                {{ car }}
+            </div>
+            <a href="{% url 'management:car_return' car.id %}" class="btn col-4 py-3 ps-2 bg-danger rounded-0 text-white">Вернуть <br> авто</a>
+
+
+             {% if car.get_active_daily_check %}
+                 <a href="{% url 'management:close_daily_check' car.get_active_daily_check.id %}" class="btn col-4 py-3 ps-2 bg-warning rounded-0 border-start-s0 ">Закрыть <br> смену</a>
+             {% else %}
+                {% if car.get_last_daily_check %}
+                    <button type="button" class="btn col-4 btn-light rounded-0 py-3 ps-2">Смена закрыта</button>
+                {% else %}
+                    <a href="{% url 'management:create_daily_check' car.id %}" class="btn btn-success col-4 rounded-0 py-3 ps-2">Открыть смену</a>
+                {% endif %}
+             {% endif %}
+
+
+
+        </div>
+        {% empty %}
+    <div class="row align-items-start mb-3 border rounded">
+         <div class="col text-center py-4">
+            Нет закрепленных автомобилей
+        </div>
+    </div>
+        {% endfor %}
+
+
+
 
 {% endblock %}

@@ -3,11 +3,10 @@
 {% block title %} Авторизация {% endblock %}
 
 {% block content %}
-    <h2>Авторизация</h2>
-    <form method="post">
+    <form method="post" class="form">
         {% csrf_token %}
-        {{ form.as_p }}
-        <p><input type="submit" value="Выход"></p>
+        {{ form.username }}
+        {{ form.password }}
+        <input type="submit" value="Вход" class="btn btn-secondary form-control mt-3">
     </form>
-    <p><a href="{% url 'password_reset' %}">Забыли пароль</a></p>
 {% endblock %}

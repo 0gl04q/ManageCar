@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %} Список автомобилей {% endblock %}
+
+{% block content %}
+    <div class="row align-items-start mb-3 border rounded">
+        <div class="col-3 align-self-center text-center py-4 border">Авто</div>
+        <div class="col-3 align-self-center text-center py-4 border">Статус</div>
+        <div class="col-3 align-self-center text-center py-4 border">Дефекты</div>
+        <div class="col-3 align-self-center text-center py-4 border">Владелец</div>
+    </div>
+    {% for car in cars %}
+        <div class="row align-items-start mb-3 border rounded">
+            <div class="col-3 align-self-center text-center py-4">
+                {{ car }}
+            </div>
+
+            <div class="col-3 btn rounded-0 py-4 ps-2 border-start-s0  bg-secondary text-white">{{ car.parameters.get_status_display }}</div>
+
+            <div class="col-3 btn rounded-0 py-4 ps-2 border-start-s0  bg-secondary text-white">
+                {% if car.get_last_daily_check.get_defect_status_display %}
+                    {{ car.get_last_daily_check.get_defect_status_display }}
+                {% else %}
+                    -
+                {% endif %}
+            </div>
+
+            <div class="col-3 btn rounded-0 py-4 ps-2 border-start-s0  bg-secondary text-white">
+                {% if car.get_now_author %}
+                    {{ car.get_now_author }}
+                {% else %}
+                    -
+                {% endif %}
+            </div>
+
+        </div>
+    {% empty %}
+        <div class="row align-items-start mb-3 border rounded">
+             <div class="col text-center py-4">
+                Нет автомобилей
+            </div>
+        </div>
+
+    {% endfor %}
+
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Свободные автомобили{% endblock %}
+
+{% block content %}
+
+        {% for car in cars %}
+        <div class="row align-items-start mb-3 border rounded">
+            <div class="col-8 align-self-center text-center py-4">
+                {{ car }}
+            </div>
+
+            <a href="{% url 'management:car_migration' car_id=car.id %}" class="col-4 btn rounded-0 py-4 ps-2 border-start-s0  bg-success text-white">Взять</a>
+        </div>
+        {% empty %}
+            <div class="row align-items-start mb-3 border rounded">
+                 <div class="col text-center py-4">
+                    Нет свободных автомобилей
+                </div>
+            </div>
+
+        {% endfor %}
+
+{% endblock %}

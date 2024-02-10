@@ -74,15 +74,18 @@ class Car(models.Model):
         verbose_name_plural = 'Автомобили'
 
     def __str__(self):
-        model = self.car_model
-
-        return f'{model} - {self.gos_number}'
+        return f'{self.gos_number}'
 
     def get_active_daily_check(self):
         return self.dailycheck_set.get(active=True)
 
     def get_last_daily_check(self):
-        return self.dailycheck_set.filter(created=now().date())
+        return self.dailycheck_set.order_by('-created').first()
+
+    def get_now_author(self):
+        transaction = self.carmigration_set.filter(active=True).first()
+
+        return transaction.author if transaction else None
 
 
 class CarParam(models.Model):
@@ -91,10 +94,10 @@ class CarParam(models.Model):
     """
 
     class Status(models.TextChoices):
-        JOB = 'JO', 'В работе'
-        FREE = 'FR', 'Свободен'
-        RESERVE = 'RE', 'Зарезервирован'
-        TECH_SERVICE = 'TS', 'На ТО'
+        JOB = '1', 'В работе'
+        RESERVE = '2', 'Занят'
+        TECH_SERVICE = '3', 'На ТО'
+        FREE = '4', 'Свободен'
 
     class Meta:
         verbose_name_plural = 'Автомобиль. Дополнительные сведения'
@@ -134,13 +137,12 @@ class Photo(models.Model):
         По логике ежедневны в рамках одной транзакции
     """
     created = models.DateTimeField(auto_now=True, verbose_name='Дата создания')
-    photo = models.ImageField(upload_to='profile_images', verbose_name='Фото')
-    car = models.ForeignKey(Car, on_delete=models.CASCADE, verbose_name='Автомобиль')
+    name = models.CharField(max_length=150, verbose_name='Имя фотографии', null=True)
+    file = models.ImageField(upload_to='car_images', verbose_name='Фото')
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
-    city = models.ForeignKey(City, on_delete=models.CASCADE, verbose_name='Город')
 
     class Meta:
         verbose_name_plural = 'Фотографии'
 
     def __str__(self):
-        return f'{self.created} {self.car}'
+        return f'{self.file.name}'

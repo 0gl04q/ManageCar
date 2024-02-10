@@ -8,9 +8,9 @@ class OwnerAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.Photo)
-class OwnerAdmin(admin.ModelAdmin):
-    list_display = ['photo', 'created', 'car', 'author', 'city']
-    list_filter = ['car', 'author', 'city']
+class PhotoAdmin(admin.ModelAdmin):
+    list_display = ['file', 'created', 'author']
+    list_filter = ['author']
     ordering = ['-created']
     date_hierarchy = 'created'
 

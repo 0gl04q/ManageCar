@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django_summernote.admin import SummernoteModelAdmin
 from . import models
 
 
@@ -11,7 +12,8 @@ class CarMigrationAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.DailyCheck)
-class DailyCheckAdmin(admin.ModelAdmin):
+class DailyCheckAdmin(SummernoteModelAdmin):
+    summernote_fields = ('defect', )
     list_display = ['car', 'author', 'city', 'created', 'updated', 'active']
     list_filter = ['author', 'car', 'city', 'active']
     date_hierarchy = 'created'

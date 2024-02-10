@@ -11,9 +11,9 @@ class DailyCheck(models.Model):
     """
 
     class Status(models.TextChoices):
-        CRITICAL = 'CR', 'Критично'
+        CONFIRM = 'CO', '-'
         WARNING = 'WA', 'Предупреждение'
-        CONFIRM = 'CO', 'Без замечаний'
+        CRITICAL = 'CR', 'Критично'
 
     photo = models.ManyToManyField(manual_models.Photo, verbose_name='Фото')
 
@@ -21,7 +21,7 @@ class DailyCheck(models.Model):
     car = models.ForeignKey(manual_models.Car, on_delete=models.CASCADE, verbose_name='Автомобиль')
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
 
-    defect = models.TextField(verbose_name='Описание дефектов', null=True)
+    defect = models.TextField(verbose_name='Описание дефектов', null=True, blank=True)
     defect_status = models.CharField(max_length=2, choices=Status.choices, default=Status.CONFIRM,
                                      verbose_name='Статус дефектов')
 
@@ -46,6 +46,9 @@ class DailyCheck(models.Model):
 
     def __str__(self):
         return f'Смена от {self.created} {self.car}'
+
+    def get_photo(self, photo_name):
+        return self.photo.filter(name=photo_name).first()
 
 
 class CarMigration(models.Model):
