@@ -1,14 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect, reverse
-from django.http import HttpResponse
-from django.views.generic import DetailView, ListView, UpdateView
-from django.utils.timezone import now
-from django.views.decorators.http import require_POST, require_GET, require_http_methods
+from django.views.generic import DetailView, ListView
+from django.views.decorators.http import require_GET, require_http_methods
 
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-
-from django.contrib.auth.models import User
-from django.conf import settings
 from django.contrib import messages
 import base64
 from .forms import DailyCheckForm, PhotoForm
@@ -16,9 +11,6 @@ from .models import CarMigration, DailyCheck
 from manual.models import Car, CarParam, Photo
 from manual.forms import CarForm, CarParametersForm
 from django.core.files.base import ContentFile
-
-from django.core.exceptions import ValidationError
-from django.utils.translation import gettext_lazy as _
 
 
 @require_GET
@@ -257,7 +249,6 @@ def edit_car(request, pk):
 @login_required
 @permission_required(perm='management:view_all_cars')
 def create_car(request):
-
     if request.method == 'POST':
         car_form = CarForm(request.POST)
         car_parameters_form = CarParametersForm(request.POST)
@@ -286,7 +277,6 @@ def create_car(request):
 @login_required
 @permission_required(perm='management.view_all_cars')
 def update_ts(request, pk):
-
     parameters = get_object_or_404(Car, pk=pk).parameters
     parameters.technical_service = parameters.car.mileage + 10000
     parameters.save()
