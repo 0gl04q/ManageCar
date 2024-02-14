@@ -15,12 +15,12 @@
 
 
              {% if car.get_active_daily_check %}
-                 <a href="{% url 'management:close_daily_check' car.get_active_daily_check.id %}" class="btn col-4 py-3 ps-2 bg-warning rounded-0 border-start-s0 ">Закрыть <br> смену</a>
+                 <a href="{% url 'management:close_daily_check' car.get_active_daily_check.id %}" class="btn col-4 py-3 ps-2 btn-warning rounded-0 rounded-end border-start-s0 ">Закрыть <br> смену</a>
              {% else %}
-                {% if car.get_last_daily_check %}
-                    <button type="button" class="btn col-4 btn-light rounded-0 py-3 ps-2">Смена закрыта</button>
+                {% if car.get_now_daily_check %}
+                    <button type="button" class="btn col-4 btn-light rounded-0 py-3 ps-2">Смена <br> закрыта</button>
                 {% else %}
-                    <a href="{% url 'management:create_daily_check' car.id %}" class="btn btn-success col-4 rounded-0 py-3 ps-2">Открыть смену</a>
+                    <a href="{% url 'management:create_daily_check' car.id %}" class="btn btn-success rounded-0 col-4 rounded-end py-3 ps-2">Открыть <br> смену</a>
                 {% endif %}
              {% endif %}
 

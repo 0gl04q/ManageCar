@@ -10,7 +10,7 @@
                 {{ car }}
             </div>
 
-            <a href="{% url 'management:car_migration' car_id=car.id %}" class="col-4 btn rounded-0 py-4 ps-2 border-start-s0  bg-success text-white">Взять</a>
+            <a href="{% url 'management:car_migration' car_id=car.id %}" class="col-4 btn rounded-0 py-4 ps-2 border-start-s0 rounded-end bg-success text-white">Взять</a>
         </div>
         {% empty %}
             <div class="row align-items-start mb-3 border rounded">

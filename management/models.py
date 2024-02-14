@@ -28,8 +28,8 @@ class DailyCheck(models.Model):
     mileage_auto = models.PositiveIntegerField(verbose_name='Пробег авто', null=True)
     mileage_daily = models.PositiveIntegerField(verbose_name='Пробег за смену', null=True)
 
-    key = models.CharField(max_length=500, verbose_name='Держатель ключей', null=True)
-    document = models.CharField(max_length=500, verbose_name='Держатель документов', null=True)
+    document = models.CharField(max_length=500, verbose_name='Держатель документов/ключей', null=True)
+    location = models.CharField(max_length=500, verbose_name='Стоянка', null=True)
 
     created = models.DateField(auto_now_add=True, verbose_name='Дата открытия')
     updated = models.DateField(auto_now=True, verbose_name='Дата закрытия')

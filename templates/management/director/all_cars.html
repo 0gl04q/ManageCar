@@ -1,39 +1,63 @@
 {% extends 'base.html' %}
+{% load director_filters %}
 
 {% block title %} Список автомобилей {% endblock %}
 
 {% block content %}
+
+
     <div class="row align-items-start mb-3 border rounded">
+        <div class="col-3 align-self-center text-center py-4 border">Дефекты</div>
         <div class="col-3 align-self-center text-center py-4 border">Авто</div>
         <div class="col-3 align-self-center text-center py-4 border">Статус</div>
-        <div class="col-3 align-self-center text-center py-4 border">Дефекты</div>
         <div class="col-3 align-self-center text-center py-4 border">Владелец</div>
     </div>
     {% for car in cars %}
-        <div class="row align-items-start mb-3 border rounded">
-            <div class="col-3 align-self-center text-center py-4">
-                {{ car }}
+        <a href="{% url 'management:info_car' car.pk %}" class="text-decoration-none text-reset">
+            <div class="row align-items-start mb-3 border rounded">
+                <div class="col-3 text-center rounded-start py-4 ps-2 border-start
+                    {% if car.get_last_close_daily_check.defect_status == 'WA' %}
+                        bg-warning
+                    {% elif car.get_last_close_daily_check.defect_status == 'CR' %}
+                        bg-danger
+                    {% else %}
+                        bg-success
+                    {% endif %}
+                ">
+
+                    {% if car.get_last_close_daily_check.defect_status == 'WA' %}
+                        !
+                    {% elif car.get_last_close_daily_check.defect_status == 'CR' %}
+                        X
+                    {% else %}
+                        -
+                    {% endif %}
+                </div>
+
+                <div class="col-3 align-self-center text-center ">
+                    <span>{{ car }}</span>
+                    <br>
+                    <span style="font-size: 60%;">
+                        {% tag_info info=car.get_ts %} / {% tag_info info=car.get_grm %}
+                    </span>
+                    <br>
+                    <span style="font-size: 80%;">
+                        {{ car.get_insurance }}
+                    </span>
+                </div>
+
+                <div class="col-3 text-center rounded-0 py-4 ps-2 border-start ">{{ car.parameters.get_status_display }}</div>
+
+                <div class="col-3 text-center rounded-0 py-4 ps-2 border-start">
+                    {% if car.get_now_author %}
+                        {{ car.get_now_author }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </div>
+
             </div>
-
-            <div class="col-3 btn rounded-0 py-4 ps-2 border-start-s0  bg-secondary text-white">{{ car.parameters.get_status_display }}</div>
-
-            <div class="col-3 btn rounded-0 py-4 ps-2 border-start-s0  bg-secondary text-white">
-                {% if car.get_last_daily_check.get_defect_status_display %}
-                    {{ car.get_last_daily_check.get_defect_status_display }}
-                {% else %}
-                    -
-                {% endif %}
-            </div>
-
-            <div class="col-3 btn rounded-0 py-4 ps-2 border-start-s0  bg-secondary text-white">
-                {% if car.get_now_author %}
-                    {{ car.get_now_author }}
-                {% else %}
-                    -
-                {% endif %}
-            </div>
-
-        </div>
+        </a>
     {% empty %}
         <div class="row align-items-start mb-3 border rounded">
              <div class="col text-center py-4">
@@ -42,5 +66,7 @@
         </div>
 
     {% endfor %}
-
+    <div class="row align-items-start mb-3 border rounded">
+        <a href="{% url 'management:create_car' %}" class=" col-12 btn btn-success form-control text-white py-3"> Добавить авто </a>
+    </div>
 {% endblock %}

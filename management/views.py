@@ -1,8 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.http import HttpResponse
+from django.views.generic import DetailView, ListView, UpdateView
 from django.utils.timezone import now
 from django.views.decorators.http import require_POST, require_GET, require_http_methods
+
 from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.contrib import messages
@@ -10,7 +14,11 @@ import base64
 from .forms import DailyCheckForm, PhotoForm
 from .models import CarMigration, DailyCheck
 from manual.models import Car, CarParam, Photo
+from manual.forms import CarForm, CarParametersForm
 from django.core.files.base import ContentFile
+
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
 
 @require_GET
@@ -23,7 +31,7 @@ def get_all_car(request):
     }
 
     return render(request,
-                  template_name='management/change_cars.html',
+                  template_name='management/driver/change_cars.html',
                   context=context)
 
 
@@ -77,7 +85,7 @@ def get_profile(request):
 
     return render(
         request=request,
-        template_name='management/user_cars.html',
+        template_name='management/driver/user_cars.html',
         context=context
     )
 
@@ -117,7 +125,12 @@ def close_daily_check(request, daily_check_id):
         if form.is_valid():
             form.instance.active = False
             form.save()
-            messages.success(request, message=f'Cмена {daily_check.car} закрыта!')
+
+            car = daily_check.car
+            car.mileage = form.cleaned_data['mileage_auto']
+            car.save()
+
+            messages.success(request, message=f'Cмена {car} закрыта!')
 
             return redirect(to=reverse(viewname='management:user_cars'))
 
@@ -128,7 +141,7 @@ def close_daily_check(request, daily_check_id):
         'daily_check_id': daily_check_id
     }
 
-    return render(request, template_name='management/close_daily_check.html', context=context)
+    return render(request, template_name='management/driver/close_daily_check.html', context=context)
 
 
 @require_http_methods(('GET', 'POST'))
@@ -188,7 +201,7 @@ def capture_photo(request, daily_check_id, photo_num, title_action):
         'title_action': title_dict[title_action]
     }
 
-    return render(request, template_name='management/create_photo.html', context=context)
+    return render(request, template_name='management/photo/create_photo.html', context=context)
 
 
 def redirect_view(request):
@@ -197,15 +210,93 @@ def redirect_view(request):
     return response
 
 
-@require_GET
+class DirectorPermissionRequiredMixin(LoginRequiredMixin, PermissionRequiredMixin):
+    permission_required = 'management.view_all_cars'
+    raise_exception = True
+
+
+class CarListView(DirectorPermissionRequiredMixin, ListView):
+    queryset = Car.objects.all().order_by('parameters__status')
+    context_object_name = 'cars'
+    template_name = 'management/director/all_cars.html'
+
+
+class CarDetailView(DirectorPermissionRequiredMixin, DetailView):
+    model = Car
+    context_object_name = 'car'
+    template_name = 'management/director/info_car.html'
+
+
 @login_required
-@permission_required(perm='management.view_all_cars', raise_exception=True)
-def manage_cars(request):
-    cars = Car.objects.all().order_by('parameters__status')
+@permission_required(perm='management.view_all_cars')
+def edit_car(request, pk):
+    car = get_object_or_404(Car, pk=pk)
+
+    if request.method == 'POST':
+        car_form = CarForm(request.POST, instance=car)
+        car_parameters_form = CarParametersForm(request.POST, instance=car.parameters)
+
+        if car_form.is_valid() and car_parameters_form.is_valid():
+            car_form.save()
+            car_parameters_form.save()
+            messages.success(request, 'Изменения сохранены')
+            return redirect(to='management:info_car', pk=pk)
+    else:
+        car_form = CarForm(instance=car)
+        car_parameters_form = CarParametersForm(instance=car.parameters)
 
     context = {
-        'cars': cars
+        'car': car,
+        'car_form': car_form,
+        'car_parameters_form': car_parameters_form
     }
 
-    return render(request, template_name='management/director/all_cars.html', context=context)
+    return render(request, template_name='management/director/edit_car.html', context=context)
 
+
+@login_required
+@permission_required(perm='management:view_all_cars')
+def create_car(request):
+
+    if request.method == 'POST':
+        car_form = CarForm(request.POST)
+        car_parameters_form = CarParametersForm(request.POST)
+
+        if car_form.is_valid() and car_parameters_form.is_valid():
+            car = car_form.save()
+
+            car_parameters_form.instance.car = car
+            car_parameters_form.save()
+
+            messages.success(request, 'Автомобиль добавлен')
+
+            return redirect(to='management:info_car', pk=car_form.instance.pk)
+    else:
+        car_form = CarForm()
+        car_parameters_form = CarParametersForm()
+
+    context = {
+        'car_form': car_form,
+        'car_parameters_form': car_parameters_form
+    }
+
+    return render(request, template_name='management/director/create_car.html', context=context)
+
+
+@login_required
+@permission_required(perm='management.view_all_cars')
+def update_ts(request, pk):
+
+    parameters = get_object_or_404(Car, pk=pk).parameters
+    parameters.technical_service = parameters.car.mileage + 10000
+    parameters.save()
+    return redirect(to='management:info_car', pk=pk)
+
+
+@login_required
+@permission_required(perm='management.view_all_cars')
+def update_grm(request, pk):
+    parameters = get_object_or_404(Car, pk=pk).parameters
+    parameters.grm = parameters.car.mileage + 30000
+    parameters.save()
+    return redirect(to='management:info_car', pk=pk)

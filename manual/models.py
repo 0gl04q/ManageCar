@@ -2,6 +2,9 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.timezone import now
 from django.contrib.auth.models import User
+from django.shortcuts import reverse
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
 
 class Owner(models.Model):
@@ -46,7 +49,7 @@ class CarModel(models.Model):
 
 class CarManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(parameters__status=CarParam.Status.FREE)
+        return super().get_queryset().filter(active=True, parameters__status=CarParam.Status.FREE)
 
 
 class Car(models.Model):
@@ -68,6 +71,7 @@ class Car(models.Model):
         default=2000,
         validators=(MinValueValidator(1950), MaxValueValidator(now().year))
     )
+
     active = models.BooleanField(default=True, verbose_name='Статус')
 
     class Meta:
@@ -82,10 +86,27 @@ class Car(models.Model):
     def get_last_daily_check(self):
         return self.dailycheck_set.order_by('-created').first()
 
+    def get_last_close_daily_check(self):
+        return self.dailycheck_set.order_by('active', '-created').first()
+
+    def get_now_daily_check(self):
+        return self.dailycheck_set.filter(created__day=now().day)
+
     def get_now_author(self):
         transaction = self.carmigration_set.filter(active=True).first()
-
         return transaction.author if transaction else None
+
+    def get_ts(self):
+        return self.parameters.technical_service - self.mileage
+
+    def get_grm(self):
+        return self.parameters.grm - self.mileage
+
+    def get_insurance(self):
+        return self.parameters.insurance.strftime('%d.%m.%Y')
+
+    def get_absolute_url(self):
+        return reverse(viewname='management:info_car', args=(self.pk,))
 
 
 class CarParam(models.Model):
@@ -106,6 +127,7 @@ class CarParam(models.Model):
     insurance = models.DateField(verbose_name='Страховка')
     technical_service = models.PositiveIntegerField(verbose_name='ТО')
     grm = models.PositiveIntegerField(verbose_name='ГРМ')
+
     status = models.CharField(
         max_length=2,
         choices=Status.choices,

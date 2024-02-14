@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load director_filters %}
+
+{% block title %} {{ car }} {% endblock %}
+
+{% block content %}
+
+    {% row_table name='Гос. номер' info=car %}
+    {% row_table name='Модель' info=car.car_model %}
+    {% row_table name='Статус автомобиля' info=car.parameters.get_status_display %}
+
+    {% with car.get_now_author as car_author %}
+        {% if car_author %}
+            {% row_table name='Текущий владелец' info=car_author %}
+        {% else %}
+            {% row_table name='Текущий владелец' info='-' %}
+        {% endif %}
+    {% endwith %}
+
+    {% with car.get_last_daily_check.get_defect_status_display as defect_status %}
+        {% if defect_status %}
+            {% row_table name='Статус дефектов' info=defect_status %}
+        {% else %}
+            {% row_table name='Статус дефектов' info='-' %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="row align-items-start mb-3 border rounded">
+        <div class="col-6 align-self-center text-center border-end">
+            Текущие дефекты
+        </div>
+        <div class="col-6 align-self-center text-center">
+            {% if car.get_last_daily_check.defect %}
+                {{ car.get_last_daily_check.defect }}
+            {% else %}
+                -
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row align-items-start mb-3 border rounded">
+        <div class="col-6 align-self-center text-center border-end">
+            Ключи/Документы
+        </div>
+        <div class="col-6 align-self-center text-center">
+            {% if car.get_last_daily_check.document %}
+                {{ car.get_last_daily_check.document }}
+            {% else %}
+                -
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row align-items-start mb-3 border rounded">
+        <div class="col-6 align-self-center text-center border-end">
+            Стоянка
+        </div>
+        <div class="col-6 align-self-center text-center">
+            {% if car.get_last_daily_check.location %}
+                {{ car.get_last_daily_check.location }}
+            {% else %}
+                -
+            {% endif %}
+        </div>
+    </div>
+
+    {% row_table name='Пробег' info=car.mileage %}
+    {% row_table name='Страховка' info=car.get_insurance %}
+
+    <div class="row align-items-start mb-3 border rounded">
+        <div class="col-4 align-self-center text-center border-end">
+            ТО
+        </div>
+        <div class="col-4 align-self-center text-center">
+            {% tag_info info=car.get_ts %}
+        </div>
+        <button class="btn btn-success col-4 align-self-center text-center update-btn" data-text="ТО"  data-alias="{% url 'management:update_ts' car.pk %}">
+            Обновить
+        </button>
+    </div>
+
+    <div class="row align-items-start mb-3 border rounded">
+        <div class="col-4 align-self-center text-center border-end">
+            ГРМ
+        </div>
+        <div class="col-4 align-self-center text-center">
+            {% tag_info info=car.get_grm %}
+        </div>
+        <button type="button" class="btn btn-success col-4 align-self-center text-center update-btn" data-text="ГРМ" data-alias="{% url 'management:update_grm' car.pk %}">
+            Обновить
+        </button>
+    </div>
+
+    <div class="row align-items-start mb-3 border rounded">
+        <a href="{% url 'management:edit_car' car.pk %}" class=" col-12 btn btn-danger form-control text-white py-3"> Редактировать </a>
+    </div>
+
+
+{% endblock %}
+
+{% block script %}
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+      $(document).ready(function(){
+        $(".update-btn").on("click", function(){
+
+          var textAlert = $(this).data("text");
+          var urlAlias = $(this).data("alias");
+          var isConfirmed = confirm("Вы уверены, что хотите продлить " + textAlert + "?");
+
+          if (isConfirmed) {
+              $.ajax({
+                type: "POST",
+                url: urlAlias,
+                data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function(response){location.reload();}
+              });
+          }
+        });
+      });
+    </script>
+{% endblock %}

@@ -12,9 +12,6 @@
     {% bootstrap_css %}
     {% bootstrap_javascript %}
 
-
-
-<!--    <link href="{% static 'css/cover.css' %}" rel="stylesheet">-->
   </head>
 
 <body class="d-flex h-100">
@@ -62,25 +59,17 @@
           </div>
         </div>
 
-
-
         {% if messages %}
             {% for message in messages %}
-                <div class="container">
-                    <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
+                <div class="alert alert-{{ message.tags }} alert-dismissible  form-control" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             {% endfor %}
         {% endif %}
 
       <main class="mx-3">
-
-          {% block content %}
-
-          {% endblock %}
-
+          {% block content %}{% endblock %}
       </main>
 
       <footer class="mt-auto text-center">
@@ -88,6 +77,8 @@
       </footer>
     </div>
 
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.bundle.min.js"></script>
 
+    {% block script %}{% endblock %}
 </body>
 </html>

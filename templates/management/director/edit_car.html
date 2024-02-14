@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load director_filters %}
+
+{% block title %} {{ car }} {% endblock %}
+
+{% block content %}
+
+    {% include 'includes/errors.html' with form=car_form %}
+    {% include 'includes/errors.html' with form=car_parameters_form %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        {% row_form name='Гос. номер' info=car_form.gos_number %}
+        {% row_form name='Модель' info=car_form.car_model %}
+        {% row_form name='Владелец' info=car_form.owner %}
+        {% row_form name='Пробег' info=car_form.mileage %}
+        {% row_form name='Год выпуска' info=car_form.year %}
+        {% row_form name='Активность' info=car_form.active %}
+        {% row_form name='Страховка' info=car_parameters_form.insurance %}
+        {% row_form name='Следующее ТО' info=car_parameters_form.technical_service %}
+        {% row_form name='Следующее ГРМ' info=car_parameters_form.grm %}
+
+        <div class="row align-items-start mb-3 border rounded">
+            <button type="submit" class=" col-12 btn btn-success form-control text-white py-3"> Сохранить </button>
+        </div>
+
+        <div class="row align-items-start mb-3 border rounded">
+            <a href="{% url 'management:info_car' car.pk %}" type="submit" class=" col-12 btn btn-secondary form-control text-white py-3"> Отменить </a>
+        </div>
+    </form>
+
+{% endblock %}

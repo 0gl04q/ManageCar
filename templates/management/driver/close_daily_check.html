@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %} Закрытие смены {% endblock %}
+
+{% block content %}
+
+{% include 'includes/errors.html' %}
+
+<form method="POST">
+    {% csrf_token %}
+
+    <div class="my-4">Фото сбоку:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {% include 'management/photo/includes/photo_menu.html' with photo=photo_1 photo_num=1 %}
+    </div>
+
+    <div class="mb-4">Фото спереди:&nbsp;
+        {% include 'management/photo/includes/photo_menu.html' with photo=photo_2 photo_num=2 %}
+    </div>
+
+    Дефекты: {{ form.defect }}
+    Статус дефектов: {{ form.defect_status }}
+    Общий пробег: {{ form.mileage_auto }}
+    Дневной пробег: {{ form.mileage_daily }}
+    Документы/ключи: {{ form.document }}
+    Стоянка: {{ form.location }}
+
+
+    <button type="submit" class="btn btn-success mb-3 form-control py-3">Закрыть смену</button>
+</form>
+
+
+{% endblock %}
