@@ -118,6 +118,20 @@ def close_daily_check(request, daily_check_id):
             form.instance.active = False
             form.save()
 
+            photo_1 = form.cleaned_data['photo_1']
+            daily_check.photo.create(
+                name=f'1',
+                file=photo_1,
+                author=request.user
+            )
+
+            photo_2 = form.cleaned_data['photo_2']
+            daily_check.photo.create(
+                name=f'2',
+                file=photo_2,
+                author=request.user
+            )
+
             car = daily_check.car
             car.mileage = form.cleaned_data['mileage_auto']
             car.save()
@@ -128,8 +142,6 @@ def close_daily_check(request, daily_check_id):
 
     context = {
         'form': form,
-        'photo_1': daily_check.get_photo(f'{daily_check_id}_1.jpg'),
-        'photo_2': daily_check.get_photo(f'{daily_check_id}_2.jpg'),
         'daily_check_id': daily_check_id
     }
 

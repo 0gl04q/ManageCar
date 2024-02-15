@@ -68,6 +68,9 @@ class DailyCheckForm(forms.ModelForm):
             },
             'mileage_daily': {
                 'invalid': 'Пожалуйста введите дневной автопробег числом'
+            },
+            'photo_1': {
+                'required': 'Введите число'
             }
         }
 
