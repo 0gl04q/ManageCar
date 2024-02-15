@@ -5,9 +5,25 @@ from django.utils.translation import gettext_lazy as _
 
 
 class DailyCheckForm(forms.ModelForm):
+
+    photo_1 = forms.ImageField(widget=forms.FileInput(
+        attrs={
+            'onchange': "handleFileChange('id_photo_1', 'photoStatus_1')",
+            'capture': 'camera',
+            'style': 'opacity: 0; position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: pointer;'
+        }
+    ))
+    photo_2 = forms.ImageField(widget=forms.FileInput(
+        attrs={
+            'onchange': "handleFileChange('id_photo_2', 'photoStatus_2')",
+            'capture': 'camera',
+            'style': 'opacity: 0; position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: pointer;'
+        }
+    ))
+
     class Meta:
         model = DailyCheck
-        fields = ['defect', 'defect_status', 'mileage_auto', 'mileage_daily', 'document', 'location']
+        fields = ['photo_1', 'photo_2', 'defect', 'defect_status', 'mileage_auto', 'mileage_daily', 'document', 'location']
         widgets = {
             'defect': forms.Textarea(
                 attrs={

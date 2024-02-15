@@ -113,7 +113,7 @@ def close_daily_check(request, daily_check_id):
 
     if request.method == 'POST':
 
-        form = DailyCheckForm(data=request.POST, instance=daily_check)
+        form = DailyCheckForm(request.POST, request.FILES, instance=daily_check)
         if form.is_valid():
             form.instance.active = False
             form.save()

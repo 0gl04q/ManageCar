@@ -9,12 +9,14 @@
 <form method="POST">
     {% csrf_token %}
 
-    <div class="my-4">Фото сбоку:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        {% include 'management/photo/includes/photo_menu.html' with photo=photo_1 photo_num=1 %}
+    <div style="text-align: center; position: relative;">
+        <span id="photoStatus_1" class="btn btn-success form-control py-3 mb-2">Добавить фото сбоку</span>
+        {{ form.photo_1 }}
     </div>
 
-    <div class="mb-4">Фото спереди:&nbsp;
-        {% include 'management/photo/includes/photo_menu.html' with photo=photo_2 photo_num=2 %}
+    <div style="text-align: center; position: relative;">
+        <span id="photoStatus_2" class="btn btn-success form-control py-3 mb-2">Добавить фото спереди</span>
+        {{ form.photo_2 }}
     </div>
 
     Дефекты: {{ form.defect }}
@@ -24,9 +26,24 @@
     Документы/ключи: {{ form.document }}
     Стоянка: {{ form.location }}
 
-
     <button type="submit" class="btn btn-success mb-3 form-control py-3">Закрыть смену</button>
 </form>
 
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        function handleFileChange(id, status) {
+            var photoStatus = document.getElementById(status);
+            var fileInput = document.getElementById(id);
+
+            if (fileInput.files.length > 0) {
+                photoStatus.innerText = 'Фото добавлено';
+                fileInput.disabled = true;
+            }
+        }
+
+    </script>
 
 {% endblock %}
