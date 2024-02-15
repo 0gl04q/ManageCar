@@ -41,7 +41,7 @@
                 <br>
                 <a class="btn btn-secondary form-control py-4" href="{% url 'management:user_cars' %}">Записанные</a>
 
-                {% if perms.manual.view_all_car %}
+                {% if perms.manual.view_all_cars %}
                     <br>
                     <br>
                     <a class="btn btn-secondary form-control py-4" href="{% url 'management:manage_cars' %}">Управление автомобилями</a>

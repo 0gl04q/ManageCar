@@ -160,23 +160,22 @@ def capture_photo(request, daily_check_id, photo_num, title_action):
 
                 daily_check.photo.add(photo)
 
-            match title_action:
-                case 'create':
-                    create_photo()
-                    messages.success(request, message='Фотография сохранена')
+            if title_action == 'create':
 
-                case 'update':
-                    photo_old = daily_check.photo.get(name=photo_name)
-                    photo_old.file.delete()
-                    photo_old.delete()
+                create_photo()
+                messages.success(request, message='Фотография сохранена')
+            elif title_action == 'update':
+                photo_old = daily_check.photo.get(name=photo_name)
+                photo_old.file.delete()
+                photo_old.delete()
 
-                    create_photo()
+                create_photo()
 
-                    messages.success(request, message='Фотография изменена')
+                messages.success(request, message='Фотография изменена')
 
-                case 'delete':
-                    print(f'delete {photo_name}')
-                    messages.success(request, message='Фотография удалена')
+            elif title_action == 'delete':
+                print(f'delete {photo_name}')
+                messages.success(request, message='Фотография удалена')
 
             return redirect(to=reverse('management:close_daily_check', args=(daily_check_id,)))
     else:
@@ -203,7 +202,7 @@ def redirect_view(request):
 
 
 class DirectorPermissionRequiredMixin(LoginRequiredMixin, PermissionRequiredMixin):
-    permission_required = 'management.view_all_cars'
+    permission_required = 'manual.view_all_cars'
     raise_exception = True
 
 
@@ -220,7 +219,7 @@ class CarDetailView(DirectorPermissionRequiredMixin, DetailView):
 
 
 @login_required
-@permission_required(perm='management.view_all_cars')
+@permission_required(perm='manual.view_all_cars', raise_exception=True)
 def edit_car(request, pk):
     car = get_object_or_404(Car, pk=pk)
 
@@ -247,7 +246,7 @@ def edit_car(request, pk):
 
 
 @login_required
-@permission_required(perm='management:view_all_cars')
+@permission_required(perm='manual:view_all_cars', raise_exception=True)
 def create_car(request):
     if request.method == 'POST':
         car_form = CarForm(request.POST)
@@ -275,7 +274,7 @@ def create_car(request):
 
 
 @login_required
-@permission_required(perm='management.view_all_cars')
+@permission_required(perm='manual.view_all_cars', raise_exception=True)
 def update_ts(request, pk):
     parameters = get_object_or_404(Car, pk=pk).parameters
     parameters.technical_service = parameters.car.mileage + 10000
@@ -284,7 +283,7 @@ def update_ts(request, pk):
 
 
 @login_required
-@permission_required(perm='management.view_all_cars')
+@permission_required(perm='manual.view_all_cars', raise_exception=True)
 def update_grm(request, pk):
     parameters = get_object_or_404(Car, pk=pk).parameters
     parameters.grm = parameters.car.mileage + 30000
