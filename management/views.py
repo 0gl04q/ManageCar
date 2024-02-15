@@ -258,7 +258,7 @@ def edit_car(request, pk):
 
 
 @login_required
-@permission_required(perm='manual:view_all_cars', raise_exception=True)
+@permission_required(perm='manual.view_all_cars', raise_exception=True)
 def create_car(request):
     if request.method == 'POST':
         car_form = CarForm(request.POST)
