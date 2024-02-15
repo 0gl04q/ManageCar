@@ -27,37 +27,37 @@ class DailyCheckForm(forms.ModelForm):
         widgets = {
             'defect': forms.Textarea(
                 attrs={
-                    'class': 'form-control mb-1',
+                    'class': 'col-6 text-center border-0',
                     'placeholder': 'Опишите наличие дефектов',
-                    'rows': 5
+                    'rows': 2
                 }
             ),
             'defect_status': forms.Select(
                 attrs={
-                    'class': 'form-control mb-1'
+                    'class': 'col-6 align-self-center text-center border-0',
                 }
             ),
             'mileage_auto': forms.TextInput(
                 attrs={
-                    "class": "form-control mb-1",
+                    'class': 'col-6 align-self-center text-center border-0',
                     'placeholder': 'Напишите общий пробег'
                 }
             ),
             'mileage_daily': forms.TextInput(
                 attrs={
-                    'class': 'form-control mb-1',
+                    'class': 'col-6 align-self-center text-center border-0',
                     'placeholder': 'Напишите дневной пробег'
                 }
             ),
             'document': forms.TextInput(
                 attrs={
-                    'class': 'form-control mb-1',
+                    'class': 'col-6 align-self-center text-center border-0',
                     'placeholder': 'Расположение документов/ключей'
                 }
             ),
             'location': forms.TextInput(
                 attrs={
-                    'class': 'form-control mb-3',
+                    'class': 'col-6 align-self-center text-center border-0',
                     'placeholder': 'Напишите стоянку'
                 }
             ),

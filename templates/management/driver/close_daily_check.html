@@ -1,32 +1,35 @@
 {% extends 'base.html' %}
-
+{% load director_filters %}
 {% block title %} Закрытие смены {% endblock %}
 
 {% block content %}
 
 {% include 'includes/errors.html' %}
 
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
 
-    <div style="text-align: center; position: relative;">
-        <span id="photoStatus_1" class="btn btn-success form-control py-3 mb-2">Добавить фото сбоку</span>
+    {% row_form name='Дефекты' info=form.defect %}
+    {% row_form name='Статус дефектов' info=form.defect_status  %}
+    {% row_form name='Общий пробег' info=form.mileage_auto %}
+    {% row_form name='Дневной пробег' info=form.mileage_daily %}
+    {% row_form name='Документы/ключи' info=form.document %}
+    {% row_form name='Стоянка' info=form.location %}
+
+    <div class="row align-items-start mb-2 border rounded" style="text-align: center; position: relative;">
+        <span id="photoStatus_1" class="col-12 btn btn-secondary form-control py-3">Добавить фото сбоку</span>
         {{ form.photo_1 }}
     </div>
 
-    <div style="text-align: center; position: relative;">
-        <span id="photoStatus_2" class="btn btn-success form-control py-3 mb-2">Добавить фото спереди</span>
+    <div class="row align-items-start mb-4 border rounded" style="text-align: center; position: relative;">
+        <span id="photoStatus_2" class="col-12 btn btn-secondary form-control py-3">Добавить фото спереди</span>
         {{ form.photo_2 }}
     </div>
 
-    Дефекты: {{ form.defect }}
-    Статус дефектов: {{ form.defect_status }}
-    Общий пробег: {{ form.mileage_auto }}
-    Дневной пробег: {{ form.mileage_daily }}
-    Документы/ключи: {{ form.document }}
-    Стоянка: {{ form.location }}
+    <div class="row align-items-start mb-3 border rounded">
+        <button type="submit" class="col-12 btn btn-success py-3">Закрыть смену</button>
+    </div>
 
-    <button type="submit" class="btn btn-success mb-3 form-control py-3">Закрыть смену</button>
 </form>
 
 
