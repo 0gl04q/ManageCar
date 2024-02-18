@@ -4,13 +4,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <link rel="manifest" href="{% static 'manifest.json' %}">
     <title>{% block title %}{% endblock %}</title>
 
     {% load django_bootstrap5 %}
 
     {% bootstrap_css %}
     {% bootstrap_javascript %}
+
+    <a href="https://www.flaticon.com/ru/free-icons/" title="Автосервис иконки">Автосервис иконки от Nhor Phai - Flaticon</a>
 
   </head>
 
