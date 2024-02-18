@@ -19,6 +19,9 @@ class Owner(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return f'/manual/owner/{self.pk}'
+
 
 class CarMark(models.Model):
     """

@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-e-na$=ss483*05*8ak(1uzwbbed%anb07c%lou4jr!amgqid_2
 DEBUG = True
 
 ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ['195.133.44.225']
 
 # Application definition
 
@@ -41,7 +42,7 @@ INSTALLED_APPS = [
     'django_summernote',
     'django_bootstrap5',
     'rest_framework',
-    'management_api.apps.ManagementApiConfig'
+    'management_api.apps.ManagementApiConfig',
 ]
 
 REST_FRAMEWORK = {
@@ -80,6 +81,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ManageCar.wsgi.application'
 
+# CSRF_TRUSTED_ORIGINS = ['http://195.133.44.225:8001', 'https://195.133.44.225:8001']
+
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -89,6 +92,16 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'postgres',
+#         'USER': 'postgres',
+#         'PASSWORD': 'postgres',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -123,9 +136,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
+STATIC_ROOT = BASE_DIR / 'static'
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static')
+# ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

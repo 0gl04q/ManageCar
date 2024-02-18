@@ -91,7 +91,17 @@
         </button>
     </div>
 
-    <div class="row align-items-start mb-3 border rounded">
+
+
+    {% for photo in car.get_last_daily_check.photo.all %}
+        <div class="row align-items-start mb-1 border rounded">
+            <a href="{{ photo.file.url }}" class="col-12 btn btn-secondary form-control text-white py-1">Фото {{ photo.name }}</a>
+        </div>
+    {% endfor %}
+
+
+
+    <div class="row align-items-start mt-3 mb-3 border rounded">
         <a href="{% url 'management:edit_car' car.pk %}" class=" col-12 btn btn-danger form-control text-white py-3"> Редактировать </a>
     </div>
 

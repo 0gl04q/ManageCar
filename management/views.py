@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib import messages
 import base64
-from .forms import DailyCheckForm, PhotoForm
+from .forms import DailyCheckForm
 from .models import CarMigration, DailyCheck
 from manual.models import Car, CarParam, Photo
 from manual.forms import CarForm, CarParametersForm
@@ -120,14 +120,14 @@ def close_daily_check(request, daily_check_id):
 
             photo_1 = form.cleaned_data['photo_1']
             daily_check.photo.create(
-                name=f'1',
+                name=f'cбоку',
                 file=photo_1,
                 author=request.user
             )
 
             photo_2 = form.cleaned_data['photo_2']
             daily_check.photo.create(
-                name=f'2',
+                name=f'спереди',
                 file=photo_2,
                 author=request.user
             )
@@ -146,65 +146,6 @@ def close_daily_check(request, daily_check_id):
     }
 
     return render(request, template_name='management/driver/close_daily_check.html', context=context)
-
-
-@require_http_methods(('GET', 'POST'))
-@login_required
-def capture_photo(request, daily_check_id, photo_num, title_action):
-    if request.method == 'POST':
-        form = PhotoForm(request.POST)
-        if form.is_valid():
-            daily_check = get_object_or_404(DailyCheck, id=daily_check_id)
-            photo_name = f'{daily_check_id}_{photo_num}.jpg'
-
-            def create_photo():
-                photo_data = form.cleaned_data['photo']
-                photo = Photo()
-
-                photo.file.save(
-                    photo_name,
-                    ContentFile(base64.b64decode(s=photo_data.split(',')[1])),
-                    save=False
-                )
-                photo.name = photo_name
-                photo.author = request.user
-                photo.save()
-
-                daily_check.photo.add(photo)
-
-            if title_action == 'create':
-
-                create_photo()
-                messages.success(request, message='Фотография сохранена')
-            elif title_action == 'update':
-                photo_old = daily_check.photo.get(name=photo_name)
-                photo_old.file.delete()
-                photo_old.delete()
-
-                create_photo()
-
-                messages.success(request, message='Фотография изменена')
-
-            elif title_action == 'delete':
-                print(f'delete {photo_name}')
-                messages.success(request, message='Фотография удалена')
-
-            return redirect(to=reverse('management:close_daily_check', args=(daily_check_id,)))
-    else:
-        form = PhotoForm()
-
-    title_dict = {
-        'create': 'Создать фото',
-        'update': 'Изменить фото',
-        'delete': 'Удалить фото'
-    }
-
-    context = {
-        'form': form,
-        'title_action': title_dict[title_action]
-    }
-
-    return render(request, template_name='management/photo/create_photo.html', context=context)
 
 
 def redirect_view(request):
