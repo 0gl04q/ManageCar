@@ -1,86 +1,114 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en" class="h-100">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="manifest" href="{% static 'manifest.json' %}">
-    <title>{% block title %}{% endblock %}</title>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-    {% load django_bootstrap5 %}
+        <meta charset="utf-8">
 
-    {% bootstrap_css %}
-    {% bootstrap_javascript %}
+        <meta http-equiv="X-UA-Compatible" content="IE=chrome=1">
 
-    <a href="https://www.flaticon.com/ru/free-icons/" title="Автосервис иконки">Автосервис иконки от Nhor Phai - Flaticon</a>
+        <meta name="mobile-web-app-capable" content="yes">
 
-  </head>
+        <meta name="apple-mobile-web-app-capable" content="yes">
 
-<body class="d-flex h-100">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <meta name="application-name" content="managecar">
 
-        <nav class="navbar navbar-expand-lg navbar-light mb-3">
-          <div class="container-fluid">
+        <link rel="manifest" href="{% static 'manifest.json' %}">
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <a class="navbar-brand" href="#">УПРАВТО</a>
-          </div>
-        </nav>
+        <title>{% block title %}{% endblock %}</title>
 
-        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-          <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Меню</h5>
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-          </div>
-          <div class="offcanvas-body text-center">
+        {% load django_bootstrap5 %}
 
-              {% if user.is_authenticated %}
-                <a class="btn btn-secondary form-control py-4" aria-current="page" href="{% url 'management:car_list' %}">Свободные</a>
-                <br>
-                <br>
-                <a class="btn btn-secondary form-control py-4" href="{% url 'management:user_cars' %}">Записанные</a>
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
 
-                {% if perms.manual.view_all_cars %}
-                    <br>
-                    <br>
-                    <a class="btn btn-secondary form-control py-4" href="{% url 'management:manage_cars' %}">Управление автомобилями</a>
-                {% endif %}
+         <style>
+            #loader {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translated(-50%, -50%)
+                z-index: 1000;
+            }
+        </style>
+    </head>
 
-              {% endif %}
-          </div>
-          <div class="offcanvas-footer text-center mb-4">
-              {% if user.is_authenticated %}
-                  <form method="post" action="{% url 'logout' %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger me-4">Выход</button>
-                  </form>
-              {% endif %}
-          </div>
+    <body class="d-flex h-100">
+
+        <div id="loader" class="spinner-border text-secondary" role="status">
+
         </div>
 
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible  form-control" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor %}
-        {% endif %}
+        <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
 
-      <main class="mx-3">
-          {% block content %}{% endblock %}
-      </main>
+            <nav class="navbar navbar-expand-lg navbar-light mb-3">
+              <div class="container-fluid">
 
-      <footer class="mt-auto text-center">
-        <p>v.АЛЬФА</p>
-      </footer>
-    </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+                <a class="navbar-brand" href="#">УПРАВТО</a>
+              </div>
+            </nav>
 
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.bundle.min.js"></script>
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+              <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasExampleLabel">Меню</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+              </div>
+              <div class="offcanvas-body text-center">
 
-    {% block script %}{% endblock %}
-</body>
+                  {% if user.is_authenticated %}
+                    <a class="btn btn-secondary form-control py-4" aria-current="page" href="{% url 'management:car_list' %}">Свободные</a>
+                    <br>
+                    <br>
+                    <a class="btn btn-secondary form-control py-4" href="{% url 'management:user_cars' %}">Записанные</a>
+
+                    {% if perms.manual.view_all_cars %}
+                        <br>
+                        <br>
+                        <a class="btn btn-secondary form-control py-4" href="{% url 'management:manage_cars' %}">Управление автомобилями</a>
+                    {% endif %}
+
+                  {% endif %}
+              </div>
+              <div class="offcanvas-footer text-center mb-4">
+                  {% if user.is_authenticated %}
+                      <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger me-4">Выход</button>
+                      </form>
+                  {% endif %}
+              </div>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible  form-control" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+          <main class="mx-3">
+              {% block content %}{% endblock %}
+          </main>
+
+          <footer class="mt-auto text-center">
+            <p>v.АЛЬФА</p>
+          </footer>
+        </div>
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.bundle.min.js"></script>
+        <script>
+            window.addEventListener('load', function () {
+                document.getElementById('loader').style.display = 'none';
+            });
+        </script>
+        {% block script %}{% endblock %}
+    </body>
 </html>
