@@ -1,12 +1,14 @@
 {% extends 'base.html' %}
+
 {% load director_filters %}
+
 {% block title %} Закрытие смены {% endblock %}
 
 {% block content %}
 
 {% include 'includes/errors.html' %}
 
-<form method="POST" enctype="multipart/form-data">
+<form id="myForm" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
 
     {% row_form name='Дефекты' info=form.defect %}
@@ -27,7 +29,7 @@
     </div>
 
     <div class="row align-items-start mb-3 border rounded">
-        <button type="submit" class="col-12 btn btn-success py-3">Закрыть смену</button>
+        <button type="submit" class="col-12 btn btn-success py-3" >Закрыть смену</button>
     </div>
 
 </form>
@@ -45,7 +47,16 @@
                 photoStatus.innerText = 'Фото добавлено';
             }
         }
-
+    </script>
+    <script>
+        document.getElementById("myForm").addEventListener("submit", function(event) {
+            if (!this.checkValidity()) {
+                 $(".loader_inner").fadeIn();
+                 $(".loader").fadeIn();
+            } else {
+                 event.preventDefault();
+            }
+         });
     </script>
 
 {% endblock %}

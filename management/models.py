@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import reverse
 from django.utils.timezone import now
 from django.contrib.auth.models import User
 import manual.models as manual_models
@@ -46,6 +47,9 @@ class DailyCheck(models.Model):
 
     def __str__(self):
         return f'Смена от {self.created} {self.car}'
+
+    def get_absolute_url(self):
+        return reverse(viewname='management:detail_daily_check', args=(self.pk,))
 
     def get_photo(self, photo_name):
         return self.photo.filter(name=photo_name).first()

@@ -64,6 +64,7 @@ class Car(models.Model):
     objects = models.Manager()
     free_cars = CarManager()
 
+    # name = models.CharField(max_length=10, verbose_name='Имя')
     car_model = models.ForeignKey(CarModel, on_delete=models.CASCADE, verbose_name='Марка/Модель')
     gos_number = models.CharField(max_length=9, verbose_name='Гос. номер')
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE, verbose_name='Владелец')

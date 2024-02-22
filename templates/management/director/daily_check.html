@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load director_filters %}
+
+{% block title %} Cмена от {{ daily_check.created }} {% endblock %}
+
+{% block content %}
+    {% row_table name='Дата открытия' info=daily_check.created %}
+    {% row_table name='Пользователь' info=daily_check.author %}
+
+    {% for photo in daily_check.photo.all %}
+        <div class="row align-items-start mb-1 border rounded">
+            <a href="{{ photo.file.url }}" class="col-12 btn btn-secondary form-control text-white py-1">Фото {{ photo.name }}</a>
+        </div>
+    {% endfor %}
+
+{% endblock %}

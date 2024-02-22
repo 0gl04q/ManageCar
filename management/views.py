@@ -171,6 +171,20 @@ class CarDetailView(DirectorPermissionRequiredMixin, DetailView):
     template_name = 'management/director/info_car.html'
 
 
+class DailyCheckDetailView(DirectorPermissionRequiredMixin, DetailView):
+    model = DailyCheck
+    context_object_name = 'daily_check'
+    template_name = 'management/director/daily_check.html'
+
+
+class CarDailyCheckListView(DirectorPermissionRequiredMixin, ListView):
+    context_object_name = 'list_daily_check'
+    template_name = 'management/director/list_car_daily_check.html'
+
+    def get_queryset(self):
+        return DailyCheck.objects.filter(car=self.kwargs['pk'])
+
+
 @login_required
 @permission_required(perm='manual.view_all_cars', raise_exception=True)
 def edit_car(request, pk):

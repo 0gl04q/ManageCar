@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %} Дневные смены {{ car }}{% endblock %}
+
+{% block content %}
+    <div class="row align-items-start mb-3 border rounded">
+        <div class="col-6 align-self-center text-center py-4 border">Дата закрытия</div>
+        <div class="col-6 align-self-center text-center py-4 border">Водитель</div>
+    </div>
+
+    {% for daily_check in list_daily_check %}
+        <a href="{% url 'management:detail_daily_check' daily_check.pk %}" class="text-decoration-none text-reset">
+         <div class="row align-items-start mb-3 border rounded">
+             <div class="col-6 align-self-center text-center">
+                {{ daily_check.created }}
+             </div>
+             <div class="col-6 align-self-center text-center">
+                {{ daily_check.author }}
+             </div>
+         </div>
+        </a>
+    {% empty %}
+         <div class="row align-items-start mb-3 border rounded">
+             <div class="col-12 align-self-center text-center">
+                Смены еще не созданы
+             </div>
+         </div>
+    {% endfor %}
+
+{% endblock %}

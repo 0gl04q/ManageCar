@@ -25,22 +25,67 @@
         {% bootstrap_css %}
         {% bootstrap_javascript %}
 
-         <style>
-            #loader {
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translated(-50%, -50%)
-                z-index: 1000;
+        <style>
+            .loader {
+              background: none repeat scroll 0 0 #fff;
+              height: 100%;
+              width: 100%;
+              position: fixed;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              top: 0;
+              z-index: 9999;
+            }
+            .loader .loader_inner {
+              animation: animate 1.5s linear infinite;
+              clip: rect(0, 80px, 80px, 40px);
+              height: 80px;
+              width: 80px;
+              position: absolute;
+              left: calc(50% - 40px);
+              top: calc(50% - 40px);
+            }
+            @keyframes animate {
+              0% {
+                transform: rotate(0deg)
+              }
+              100% {
+                transform: rotate(220deg)
+              }
+            }
+            .loader .loader_inner:after {
+              animation: animate2 1.5s ease-in-out infinite;
+              clip: rect(0, 80px, 80px, 40px);
+              content:'';
+              border-radius: 50%;
+              height: 80px;
+              width: 80px;
+              position: absolute;
+            }
+            @keyframes animate2 {
+              0% {
+                box-shadow: inset #b3dfd8 0 0 0 17px;
+                transform: rotate(-140deg);
+              }
+              50% {
+                box-shadow: inset #b3dfd8 0 0 0 2px;
+              }
+              100% {
+                box-shadow: inset #b3dfd8 0 0 0 17px;
+                transform: rotate(140deg);
+              }
             }
         </style>
+
     </head>
 
     <body class="d-flex h-100">
 
-        <div id="loader" class="spinner-border text-secondary" role="status">
-
+        <div class="loader">
+          <div class="loader_inner"></div>
         </div>
+
 
         <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
 
@@ -103,12 +148,14 @@
           </footer>
         </div>
 
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.bundle.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script>
-            window.addEventListener('load', function () {
-                document.getElementById('loader').style.display = 'none';
+            $(window).on("load", function() {
+              $(".loader_inner").fadeOut();
+              $(".loader").delay(400).fadeOut("slow");
             });
         </script>
+
         {% block script %}{% endblock %}
     </body>
 </html>
