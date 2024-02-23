@@ -5,8 +5,13 @@ from .models import Car, CarParam
 class CarForm(forms.ModelForm):
     class Meta:
         model = Car
-        fields = ['gos_number', 'car_model', 'owner', 'mileage', 'year', 'active']
+        fields = ['name', 'gos_number', 'car_model', 'owner', 'mileage', 'year', 'active']
         widgets = {
+            'name': forms.TextInput(
+                attrs={
+                    'class': 'col-6 align-self-center text-center border-0'
+                }
+            ),
             'gos_number': forms.TextInput(
                 attrs={
                     'class': 'col-6 align-self-center text-center border-0'

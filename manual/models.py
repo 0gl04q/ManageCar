@@ -82,7 +82,7 @@ class Car(models.Model):
         verbose_name_plural = 'Автомобили'
 
     def __str__(self):
-        return f'{self.name} {self.gos_number}'
+        return f'{self.name}'
 
     def get_active_daily_check(self):
         return self.dailycheck_set.get(active=True)

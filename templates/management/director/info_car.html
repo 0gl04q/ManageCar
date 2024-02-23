@@ -5,7 +5,8 @@
 
 {% block content %}
 
-    {% row_table name='Гос. номер' info=car %}
+    {% row_table name='Наименование' info=car.name %}
+    {% row_table name='Гос. номер' info=car.gos_number %}
     {% row_table name='Модель' info=car.car_model %}
     {% row_table name='Статус автомобиля' info=car.parameters.get_status_display %}
 
