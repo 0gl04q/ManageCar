@@ -64,7 +64,7 @@ class Car(models.Model):
     objects = models.Manager()
     free_cars = CarManager()
 
-    # name = models.CharField(max_length=10, verbose_name='Имя')
+    name = models.CharField(max_length=10, verbose_name='Имя', null=True)
     car_model = models.ForeignKey(CarModel, on_delete=models.CASCADE, verbose_name='Марка/Модель')
     gos_number = models.CharField(max_length=9, verbose_name='Гос. номер')
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE, verbose_name='Владелец')
@@ -82,7 +82,7 @@ class Car(models.Model):
         verbose_name_plural = 'Автомобили'
 
     def __str__(self):
-        return f'{self.gos_number}'
+        return f'{self.name} {self.gos_number}'
 
     def get_active_daily_check(self):
         return self.dailycheck_set.get(active=True)
@@ -164,7 +164,7 @@ class Photo(models.Model):
     """
     created = models.DateTimeField(auto_now=True, verbose_name='Дата создания')
     name = models.CharField(max_length=150, verbose_name='Имя фотографии', null=True)
-    file = models.ImageField(upload_to='car_images', verbose_name='Фото')
+    file = models.ImageField(upload_to='car_images', verbose_name='Фото', null=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
 
     class Meta:

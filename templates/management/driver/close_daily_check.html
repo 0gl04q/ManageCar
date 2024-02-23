@@ -51,10 +51,10 @@
     <script>
         document.getElementById("myForm").addEventListener("submit", function(event) {
             if (!this.checkValidity()) {
+                event.preventDefault();
+            } else {
                  $(".loader_inner").fadeIn();
                  $(".loader").fadeIn();
-            } else {
-                 event.preventDefault();
             }
          });
     </script>
